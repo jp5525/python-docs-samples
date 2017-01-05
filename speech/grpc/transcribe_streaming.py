@@ -226,9 +226,13 @@ def main():
             listen_print_loop(recognize_stream)
 
             recognize_stream.cancel()
-        except grpc.RpcError:
-            # This happens because of the interrupt handler
-            pass
+        except grpc.RpcError, e:
+            code = e.code()
+            if code is code.CANCELLED:
+                # This happens because of the interrupt handler
+                pass
+            else:
+                raise
 
 
 if __name__ == '__main__':
